@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>Video Chat</title>
+  </head>
+  <body>
+    <h1>Video Chat</h1>
+    <video id="local-video" autoplay></video>
+    <video id="remote-video" autoplay></video>
+
+    <script>
+      // Get references to the video elements on the page
+      const localVideo = document.getElementById('local-video');
+      const remoteVideo = document.getElementById('remote-video');
+
+      // Set up the WebRTC connection
+      const peerConnection = new RTCPeerConnection();
+      navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+        localVideo.srcObject = stream;
+        peerConnection.addStream(stream);
+      });
+
+      // Set up event handlers for the WebRTC connection
+      peerConnection.onicecandidate = event => {
+        if (event.candidate) {
+          // Send the ICE candidate to the remote peer
+        }
+      };
+      peerConnection.ontrack = event => {
+        // Add the remote video to the page
+        remoteVideo.srcObject = event.streams[0];
+      };
+
+      // Send an offer to the remote peer
+      peerConnection.createOffer().then(offer => {
+        peerConnection.setLocalDescription(offer);
+        // Send the offer to the remote peer
+      });
+    </script>
+  </body>
+</html>
